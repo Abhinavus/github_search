@@ -38,7 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
         title: TextField(
             controller: searchController,
             onChanged: (searchController) {
-              Future.delayed(Duration(milliseconds: 100), () {
+              Future.delayed(Duration(milliseconds: 1000), () {
                 setState(() {
                   futureAlbum = getalbum();
                 });
