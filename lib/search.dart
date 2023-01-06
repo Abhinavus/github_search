@@ -50,14 +50,12 @@ class _SearchScreenState extends State<SearchScreen> {
                 return Text('Error: ${snapshot.error}');
               }
               return ListView.builder(
-                itemCount: snapshot.data?.length,
+                itemCount: snapshot.data?.totalCount,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    leading: Image.network(snapshot.data!.avatarUrl),
-                    title: Text(snapshot.data!.login),
-                    trailing: Chip(
-                      label: Text(snapshot.data!.publicRepos.toString()),
-                    ),
+                    leading:
+                        Image.network(snapshot.data!.items[index].avatarUrl),
+                    title: Text(snapshot.data!.items[index].login),
                   );
                 },
               );
