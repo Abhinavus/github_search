@@ -17,7 +17,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    futureAlbum = fetchAlbum(searchController.text);
+    futureAlbum = fetchAlbum('abhinavu');
   }
 
   Future<Post> getalbum() async {
