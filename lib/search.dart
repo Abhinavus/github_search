@@ -12,12 +12,19 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late Future<Post> futureAlbum;
-  final TextEditingController searchController = TextEditingController();
+  late final TextEditingController searchController;
 
   @override
   void initState() {
     super.initState();
+    searchController = TextEditingController();
     futureAlbum = fetchAlbum('abhinavu');
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   Future<Post> getalbum() async {
@@ -31,8 +38,10 @@ class _SearchScreenState extends State<SearchScreen> {
         title: TextField(
             controller: searchController,
             onChanged: (searchController) {
-              setState(() {
-                futureAlbum = getalbum();
+              Future.delayed(Duration(milliseconds: 100), () {
+                setState(() {
+                  futureAlbum = getalbum();
+                });
               });
             }),
       ),
@@ -47,7 +56,12 @@ class _SearchScreenState extends State<SearchScreen> {
               return Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                if (snapshot.error.toString() ==
+                    'Exception: Failed to load album') {
+                  return Text('No user found');
+                } else {
+                  return Text('Error: ${snapshot.error}');
+                }
               }
               return ListView.builder(
                 itemCount: snapshot.data?.totalCount,
