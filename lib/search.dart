@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:github_search/repo.dart';
 
@@ -15,7 +12,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late Future<Post> futureAlbum;
-    final TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -23,45 +20,50 @@ class _SearchScreenState extends State<SearchScreen> {
     futureAlbum = fetchAlbum(searchController.text);
   }
 
+  Future<Post> getalbum() async {
+    return futureAlbum = fetchAlbum(searchController.text.toString());
+  }
+
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
-          controller: searchController,
-          onChanged: (searchController) {
-            // Trigger a search when the text changes
-            fetchAlbum(searchController);}
-
-        ),
+            controller: searchController,
+            onChanged: (searchController) {
+              setState(() {
+                futureAlbum = getalbum();
+              });
+            }),
       ),
-      body: searchController.text.isNotEmpty ? Center(child: CircularProgressIndicator(),): FutureBuilder(
+      body: FutureBuilder(
         future: futureAlbum,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // Display the search results in a list view
-            return ListView.builder(
-              itemCount: snapshot.data?.length,
-              itemBuilder: (context, index) {
-              
-                return ListTile(
-                  leading: Image.network(snapshot.data!.avatarUrl),
-                  title: Text(snapshot.data!.login),
-                  trailing: Chip(
-                    label: Text(snapshot.data!.publicRepos.toString()),
-                  ),
-                );
-              },
-            );
-          } else {
-            // Display a loading spinner while the search results are being fetched
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Text('Press button to start');
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              return ListView.builder(
+                itemCount: snapshot.data?.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Image.network(snapshot.data!.avatarUrl),
+                    title: Text(snapshot.data!.login),
+                    trailing: Chip(
+                      label: Text(snapshot.data!.publicRepos.toString()),
+                    ),
+                  );
+                },
+              );
           }
         },
       ),
     );
   }
-
 }
