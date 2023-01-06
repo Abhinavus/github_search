@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:github_search/repo.dart';
 
 import 'api.dart';
 
@@ -34,7 +35,7 @@ Widget build(BuildContext context) {
 
         ),
       ),
-      body: searchController.text.isEmpty ? Center(child: CircularProgressIndicator(),): FutureBuilder(
+      body: searchController.text.isNotEmpty ? Center(child: CircularProgressIndicator(),): FutureBuilder(
         future: futureAlbum,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
