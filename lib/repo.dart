@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final post = postFromJson(jsonString);
+
 import 'dart:convert';
 
 Post postFromJson(String str) => Post.fromJson(json.decode(str));
@@ -6,6 +10,30 @@ String postToJson(Post data) => json.encode(data.toJson());
 
 class Post {
     Post({
+        required this.totalCount,
+        required this.incompleteResults,
+        required this.items,
+    });
+
+    int totalCount;
+    bool incompleteResults;
+    List<Item> items;
+
+    factory Post.fromJson(Map<String, dynamic> json) => Post(
+        totalCount: json["total_count"],
+        incompleteResults: json["incomplete_results"],
+        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "total_count": totalCount,
+        "incomplete_results": incompleteResults,
+        "items": List<dynamic>.from(items.map((x) => x.toJson())),
+    };
+}
+
+class Item {
+    Item({
         required this.login,
         required this.id,
         required this.nodeId,
@@ -24,20 +52,7 @@ class Post {
         required this.receivedEventsUrl,
         required this.type,
         required this.siteAdmin,
-        this.name,
-        this.company,
-        required this.blog,
-        this.location,
-        this.email,
-        this.hireable,
-        this.bio,
-        this.twitterUsername,
-        required this.publicRepos,
-        required this.publicGists,
-        required this.followers,
-        required this.following,
-        required this.createdAt,
-        required this.updatedAt,
+        required this.score,
     });
 
     String login;
@@ -58,22 +73,9 @@ class Post {
     String receivedEventsUrl;
     String type;
     bool siteAdmin;
-    dynamic name;
-    dynamic company;
-    String blog;
-    dynamic location;
-    dynamic email;
-    dynamic hireable;
-    dynamic bio;
-    dynamic twitterUsername;
-    int publicRepos;
-    int publicGists;
-    int followers;
-    int following;
-    DateTime createdAt;
-    DateTime updatedAt;
+    double score;
 
-    factory Post.fromJson(Map<String, dynamic> json) => Post(
+    factory Item.fromJson(Map<String, dynamic> json) => Item(
         login: json["login"],
         id: json["id"],
         nodeId: json["node_id"],
@@ -92,23 +94,8 @@ class Post {
         receivedEventsUrl: json["received_events_url"],
         type: json["type"],
         siteAdmin: json["site_admin"],
-        name: json["name"],
-        company: json["company"],
-        blog: json["blog"],
-        location: json["location"],
-        email: json["email"],
-        hireable: json["hireable"],
-        bio: json["bio"],
-        twitterUsername: json["twitter_username"],
-        publicRepos: json["public_repos"],
-        publicGists: json["public_gists"],
-        followers: json["followers"],
-        following: json["following"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        score: json["score"],
     );
-
-  get length => null;
 
     Map<String, dynamic> toJson() => {
         "login": login,
@@ -129,19 +116,6 @@ class Post {
         "received_events_url": receivedEventsUrl,
         "type": type,
         "site_admin": siteAdmin,
-        "name": name,
-        "company": company,
-        "blog": blog,
-        "location": location,
-        "email": email,
-        "hireable": hireable,
-        "bio": bio,
-        "twitter_username": twitterUsername,
-        "public_repos": publicRepos,
-        "public_gists": publicGists,
-        "followers": followers,
-        "following": following,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "score": score,
     };
 }
